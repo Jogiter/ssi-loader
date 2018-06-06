@@ -1,8 +1,8 @@
 {
   "name": "ssi-loader",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Webpack SSI loader",
-  "author": "Jogiter <jogiter.g@gmail.com>",
+  "author": "jogiter",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,7 +11,6 @@
     "ssi",
     "webpack"
   ],
-  "author": "jogiter",
   "license": "WTFPL",
   "dependencies": {
     "fs": "^0.0.1-security",
