@@ -38,7 +38,7 @@ module: {
         loader: 'ssi-loader',
         options: {
           locations: {
-            "include": "https://www.uswitch.com",
+            "include": "https://github.com/Jogiter/ssi-loader",
           }
         }
       }
