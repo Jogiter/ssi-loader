@@ -1,5 +1,7 @@
 const loaderUtils = require('loader-utils')
 const request = require('request')
+const path = require('path')
+const fs = require('fs')
 
 let includeBase = ''
 
@@ -16,16 +18,34 @@ function getMatches(source) {
   return matches
 }
 
-function getRemoteFile(match) {
+function getRemoteFile(match, context) {
   return new Promise((resolve, reject) => {
-    let url = `${includeBase}${match.location}`
-    request(url, (err, response, body) => {
-      if (err) return reject(err)
-      return resolve({
-        part: match.part,
-        content: body
+    let url
+    if (path.isAbsolute(match.location)) {
+      url = `${includeBase}${match.location}`
+      request(url, (err, response, body) => {
+        if (err) return reject(err)
+        return resolve({
+          part: match.part,
+          content: body
+        })
       })
-    })
+    } else {
+      if (match.location.indexOf('@' === 0)) {
+        url = path.join(context._compiler.context, match.location.slice(1))
+      } else {
+        url = path.join(path.dirname(context.resourcePath), match.location)
+      }
+      fs.readFile(url, {
+        encoding: 'utf-8'
+      }, (err, data) => {
+        if (err) return reject(err)
+        return resolve({
+          part: match.part,
+          content: data
+        })
+      })
+    }
   })
 }
 
@@ -35,12 +55,12 @@ module.exports = function(source) {
   includeBase = options.locations['include']
 
   if (!includeBase) {
-    return source
+    return callback(null, source)
   }
 
   let matches = getMatches(source)
 
-  Promise.all(matches.map(match => getRemoteFile(match)))
+  Promise.all(matches.map(match => getRemoteFile(match, this)))
     .then(res => {
       let output = source
       for (let piece of res) {
