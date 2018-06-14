@@ -1,6 +1,6 @@
 {
   "name": "ssi-loader",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Webpack SSI loader",
   "author": "jogiter",
   "main": "index.js",
