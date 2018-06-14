@@ -37,16 +37,20 @@ function getRemoteFile(match, context) {
       } else {
         url = path.join(path.dirname(context.resourcePath), match.location)
       }
-      fs.readFile(url, {
-        encoding: 'utf-8'
-      }, (err, data) => {
-        if (err) return reject(err)
-        return resolve({
-          part: match.part,
-          content: data,
-          statusCode: 200
-        })
-      })
+      fs.readFile(
+        url,
+        {
+          encoding: 'utf-8'
+        },
+        (err, data) => {
+          if (err) return reject(err)
+          return resolve({
+            part: match.part,
+            content: data,
+            statusCode: 200
+          })
+        }
+      )
     }
   })
 }
@@ -66,7 +70,9 @@ module.exports = function(source) {
     .then(res => {
       let output = source
       for (let piece of res) {
-        output = output.replace(piece.part, piece.content)
+        if (piece.statusCode === 200) {
+          output = output.replace(piece.part, piece.content)
+        }
       }
       callback(null, output)
     })
