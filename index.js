@@ -27,7 +27,8 @@ function getRemoteFile(match, context) {
         if (err) return reject(err)
         return resolve({
           part: match.part,
-          content: body
+          content: body,
+          statusCode: response.statusCode
         })
       })
     } else {
@@ -42,7 +43,8 @@ function getRemoteFile(match, context) {
         if (err) return reject(err)
         return resolve({
           part: match.part,
-          content: data
+          content: data,
+          statusCode: 200
         })
       })
     }
